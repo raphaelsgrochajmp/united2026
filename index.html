@@ -5,7 +5,6 @@
     <style>
         body, html { margin: 0; padding: 0; background: #000; overflow: hidden; }
         #wg-target { width: 600px; min-height: 600px; }
-        .widget-main-link { display: none !important; }
     </style>
 </head>
 <body>
@@ -13,40 +12,37 @@
 
     <script>
         const stages = [
-            "67047c992662621d770ac1b8", // A
-            "67047c99af56e6175101d376", // B
-            "67047c99c81c4876d00099a2", // C
-            "67047c992662621d770ac1ba", // D
-            "67047c99af56e6175101d378", // E
-            "67047c992662621d770ac1bc", // F
-            "67047c991c3e9feeb3052444", // G
-            "67047c992662621d770ac1be", // H
-            "67047c99af56e6175101d37a", // I
-            "67047c99c81c4876d00099a4", // J
-            "67047c992662621d770ac1c0", // K
-            "67047c99af56e6175101d37c"  // L
+            "67047c992662621d770ac1b8", "67047c99af56e6175101d376", "67047c99c81c4876d00099a2",
+            "67047c992662621d770ac1ba", "67047c99af56e6175101d378", "67047c992662621d770ac1bc",
+            "67047c991c3e9feeb3052444", "67047c992662621d770ac1be", "67047c99af56e6175101d37a",
+            "67047c99c81c4876d00099a4", "67047c992662621d770ac1c0", "67047c99af56e6175101d37c"
         ];
-
         let i = 0;
 
         function load() {
             const target = document.getElementById('wg-target');
             const stage = stages[i];
-            // ID dinâmico que o ScoreAxis exige
             const widgetId = "wg" + Math.floor(Math.random() * 1000000);
             
-            target.innerHTML = `<div id="${widgetId}" class="scoreaxis-widget" style="width:600px;border:1px solid #ecf1f7"></div>`;
+            // 1. Limpamos e criamos o wrapper primeiro
+            target.innerHTML = `<div id="${widgetId}" class="scoreaxis-widget"></div>`;
             
-            const s = document.createElement('script');
-            s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=${widgetId}&lang=en&stageId=${stage}&teamLogo=1&tableLines=1&homeAway=0&header=1&position=1&goals=1&gamesCount=1&diff=1&winCount=1&drawCount=1&loseCount=1&lastGames=0&points=1&teamsLimit=all&links=0&font=roboto&fontSize=18&rowDensity=100&widgetWidth=600&widgetHeight=auto&bodyColor=%23000000&textColor=%23ffffff&linkColor=%23ffffff&borderColor=%23ecf1f7&tabColor=%23f3f8fd`;
-            s.async = true;
-            
-            target.appendChild(s);
+            // 2. Pequeno atraso de 100ms para garantir que o wrapper existe no DOM
+            setTimeout(() => {
+                const s = document.createElement('script');
+                s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=${widgetId}&lang=en&stageId=${stage}&teamLogo=1&tableLines=1&header=1&position=1&goals=1&gamesCount=1&diff=1&winCount=1&drawCount=1&loseCount=1&points=1&font=roboto&fontSize=18&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff&borderColor=%23ecf1f7`;
+                s.async = true;
+                target.appendChild(s);
+            }, 100);
+
             i = (i + 1) % stages.length;
         }
 
-        load();
-        setInterval(load, 15000);
+        // Só inicia quando a janela estiver totalmente carregada
+        window.onload = () => {
+            load();
+            setInterval(load, 15000);
+        };
     </script>
 </body>
 </html>
