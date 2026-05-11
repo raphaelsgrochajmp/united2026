@@ -2,46 +2,38 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Rodízio United 2026</title>
+    <style>
+        body { background: #000; margin: 0; display: flex; justify-content: center; overflow: hidden; }
+        .scoreaxis-widget { width: 600px; }
+    </style>
 </head>
-<body style="background: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <p>Carregando Próximo Grupo...</p>
+<body>
+
+    <div id="wg-united" class="scoreaxis-widget"></div>
 
     <script>
-        // LISTA DOS SEUS LINKS REAIS (IDs extraídos dos seus códigos)
         const stages = [
-            "67047c992662621d770ac1b8", // A
-            "67047c99af56e6175101d376", // B
-            "67047c99c81c4876d00099a2", // C
-            "67047c992662621d770ac1ba", // D
-            "67047c99af56e6175101d378", // E
-            "67047c992662621d770ac1bc", // F
-            "67047c991c3e9feeb3052444", // G
-            "67047c992662621d770ac1be", // H
-            "67047c99af56e6175101d37a", // I
-            "67047c99c81c4876d00099a4", // J
-            "67047c992662621d770ac1c0", // K
-            "67047c99af56e6175101d37c"  // L
+            "67047c992662621d770ac1b8", "67047c99af56e6175101d376", "67047c99c81c4876d00099a2",
+            "67047c992662621d770ac1ba", "67047c99af56e6175101d378", "67047c992662621d770ac1bc",
+            "67047c991c3e9feeb3052444", "67047c992662621d770ac1be", "67047c99af56e6175101d37a",
+            "67047c99c81c4876d00099a4", "67047c992662621d770ac1c0", "67047c99af56e6175101d37c"
         ];
 
-        // Pega o índice atual da URL (ex: ?i=2) ou começa do 0
         const urlParams = new URLSearchParams(window.location.search);
-        let currentIndex = parseInt(urlParams.get('i')) || 0;
+        let idx = parseInt(urlParams.get('g')) || 0;
+        let nextIdx = (idx + 1) % stages.length;
 
-        // Monta o link do widget (mas agora para ser aberto como PÁGINA)
-        const nextStage = stages[currentIndex];
-        const nextIndex = (currentIndex + 1) % stages.length;
-
-        // O segredo: redireciona para o próximo grupo após 20 segundos
-        setTimeout(() => {
-            window.location.href = `https://raphaelsgrochajmp.github.io/united2026/?i=${nextIndex}`;
-        }, 20000);
-
-        // Desenha o widget na tela (usando o método padrão que eles pedem)
-        document.write(`<div id="wg" class="scoreaxis-widget"></div>`);
+        // 1. Criamos o script do ScoreAxis exatamente como eles pedem
         const s = document.createElement('script');
-        s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg&lang=en&stageId=${nextStage}&teamLogo=1&tableLines=1&header=1&points=1&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff`;
+        s.src = "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg-united&stageId=" + stages[idx] + "&bodyColor=%23000000&textColor=%23ffffff&borderColor=%23ecf1f7&font=roboto";
+        s.async = true;
         document.body.appendChild(s);
+
+        // 2. Em vez de trocar o widget, RECARREGAMOS a página para o próximo grupo em 20 segundos
+        // Isso evita o erro de "wrapper not found"
+        setTimeout(() => {
+            window.location.href = window.location.origin + window.location.pathname + "?g=" + nextIdx;
+        }, 20000);
     </script>
 </body>
 </html>
