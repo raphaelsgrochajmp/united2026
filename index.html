@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <style>
         body, html { margin: 0; padding: 0; background: #000; overflow: hidden; }
-        #wg-scope { width: 600px; min-height: 500px; }
+        /* Forçamos a altura para o script "sentir" que a div existe */
+        #wg-scope { width: 600px; height: 600px; display: block !important; visibility: visible !important; }
     </style>
 </head>
 <body>
@@ -23,37 +24,27 @@
 
         function loadTable() {
             const container = document.getElementById('wg-scope');
-            if (!container) return; // Segurança extra
+            if (!container) return;
 
             container.innerHTML = '';
             const stage = stages[i];
             
             const s = document.createElement('script');
-            // Adicionamos um carimbo de tempo (t=) para evitar que o Chrome use o script com erro do cache
+            // Mudamos o widgetId para garantir que ele bata com o ID da DIV acima
             s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg-scope&lang=en&stageId=${stage}&teamLogo=1&tableLines=1&header=1&points=1&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff&t=${Date.now()}`;
-            s.async = true;
+            s.async = false; // Forçamos o carregamento síncrono para ele não atropelar
             
             container.appendChild(s);
             i = (i + 1) % stages.length;
         }
 
-        // Esta função garante que a DIV existe antes de chamar o carregamento
-        function start() {
-            if (document.getElementById('wg-scope')) {
-                loadTable();
-                setInterval(loadTable, 15000);
-            } else {
-                // Se não achou a Div, tenta de novo em 50ms
-                setTimeout(start, 50);
-            }
-        }
-
-        // Dispara assim que o documento básico estiver pronto
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', start);
-        } else {
-            start();
-        }
+        // AGORA O PULO DO GATO:
+        // Em vez de window.onload, usamos um pequeno atraso fixo de 2 segundos.
+        // Isso dá tempo pro M4 desenhar tudo e pro Chrome estabilizar.
+        setTimeout(function() {
+            loadTable();
+            setInterval(loadTable, 15000);
+        }, 2000);
     </script>
 </body>
 </html>
