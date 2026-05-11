@@ -2,52 +2,56 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Teste Chrome - United 2026</title>
+    <title>United 2026</title>
     <style>
-        body { background-color: #000; color: white; margin: 0; padding: 20px; font-family: sans-serif; }
-        #wg-target { width: 600px; min-height: 400px; border: 1px solid #333; }
+        body { background-color: #000; margin: 0; padding: 0; overflow: hidden; }
+        /* A caixa já nasce pronta no HTML */
+        #wg-scope { width: 600px; min-height: 500px; }
     </style>
 </head>
 <body>
 
-    <div id="wg-target">
-        <p id="status">Aguardando inicialização...</p>
-    </div>
+    <div id="wg-scope" class="scoreaxis-widget"></div>
 
     <script>
         const stages = [
-            "67047c992662621d770ac1b8", // Grupo A
-            "67047c99af56e6175101d376"  // Grupo B
+            "67047c992662621d770ac1b8", // A
+            "67047c99af56e6175101d376", // B
+            "67047c99c81c4876d00099a2", // C
+            "67047c992662621d770ac1ba", // D
+            "67047c99af56e6175101d378", // E
+            "67047c992662621d770ac1bc", // F
+            "67047c991c3e9feeb3052444", // G
+            "67047c992662621d770ac1be", // H
+            "67047c99af56e6175101d37a", // I
+            "67047c99c81c4876d00099a4", // J
+            "67047c992662621d770ac1c0", // K
+            "67047c99af56e6175101d37c"  // L
         ];
+        
         let i = 0;
 
-        function renderWidget() {
-            const container = document.getElementById('wg-target');
-            const currentStage = stages[i];
-            const uniqueId = "wg_" + Math.floor(Math.random() * 100000);
-
-            // 1. Limpamos o container e criamos a DIV que o ScoreAxis procura
-            container.innerHTML = `<div id="${uniqueId}" class="scoreaxis-widget"></div>`;
+        function loadTable() {
+            const stage = stages[i];
+            const container = document.getElementById('wg-scope');
             
-            console.log("Criando wrapper com ID: " + uniqueId);
-
-            // 2. Criamos o script apenas APÓS a div acima estar no HTML
-            const script = document.createElement('script');
-            script.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=${uniqueId}&lang=en&stageId=${currentStage}&teamLogo=1&tableLines=1&header=1&points=1&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff`;
-            script.async = true;
-
-            // 3. Adicionamos o script ao documento
-            document.body.appendChild(script);
-
+            // Limpa o conteúdo interno, mas mantém a DIV pai viva
+            container.innerHTML = '';
+            
+            const s = document.createElement('script');
+            // IMPORTANTE: widgetId agora aponta para o ID fixo 'wg-scope'
+            s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg-scope&lang=en&stageId=${stage}&teamLogo=1&tableLines=1&header=1&points=1&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff&borderColor=%23ecf1f7`;
+            s.async = true;
+            
+            container.appendChild(s);
             i = (i + 1) % stages.length;
         }
 
-        // Garante que o script só comece após o Chrome ler todo o HTML
-        window.addEventListener('load', function() {
-            renderWidget();
-            // Intervalo de 15 segundos para o rodízio
-            setInterval(renderWidget, 15000);
-        });
+        // Aguarda 1 segundo após o Chrome carregar para garantir que o wrapper existe
+        window.onload = () => {
+            setTimeout(loadTable, 1000);
+            setInterval(loadTable, 15000);
+        };
     </script>
 </body>
 </html>
