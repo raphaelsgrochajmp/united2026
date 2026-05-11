@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <style>
         body { background: #000; margin: 0; display: flex; justify-content: center; overflow: hidden; }
-        .scoreaxis-widget { width: 600px; }
+        .scoreaxis-widget { width: 600px; min-height: 600px; }
     </style>
 </head>
 <body>
@@ -23,14 +23,10 @@
         let idx = parseInt(urlParams.get('g')) || 0;
         let nextIdx = (idx + 1) % stages.length;
 
-        // 1. Criamos o script do ScoreAxis exatamente como eles pedem
-        const s = document.createElement('script');
-        s.src = "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg-united&stageId=" + stages[idx] + "&bodyColor=%23000000&textColor=%23ffffff&borderColor=%23ecf1f7&font=roboto";
-        s.async = true;
-        document.body.appendChild(s);
+        // O SEGREDO: Carregamos o script IMEDIATAMENTE
+        document.write('<script src="https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg-united&stageId=' + stages[idx] + '&bodyColor=%23000000&textColor=%23ffffff&borderColor=%23ecf1f7&font=roboto"><\/script>');
 
-        // 2. Em vez de trocar o widget, RECARREGAMOS a página para o próximo grupo em 20 segundos
-        // Isso evita o erro de "wrapper not found"
+        // Dá 20 segundos para a pessoa ler e depois pula para o próximo link
         setTimeout(() => {
             window.location.href = window.location.origin + window.location.pathname + "?g=" + nextIdx;
         }, 20000);
