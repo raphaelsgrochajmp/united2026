@@ -2,43 +2,46 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <style>
-        body, html { margin: 0; padding: 0; background: black; overflow: hidden; display: flex; justify-content: center; }
-        iframe { width: 600px; height: 900px; border: none; }
-    </style>
+    <title>Rodízio United 2026</title>
 </head>
-<body>
-    <iframe id="quadro" src=""></iframe>
+<body style="background: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <p>Carregando Próximo Grupo...</p>
 
     <script>
-        // Lista direta dos links das tabelas
-        const tabelas = [
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c992662621d770ac1b8&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // A
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99af56e6175101d376&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // B
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99c81c4876d00099a2&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // C
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c992662621d770ac1ba&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // D
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99af56e6175101d378&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // E
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c992662621d770ac1bc&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // F
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c991c3e9feeb3052444&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // G
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c992662621d770ac1be&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // H
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99af56e6175101d37a&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // I
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99c81c4876d00099a4&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // J
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c992662621d770ac1c0&bodyColor=%23000000&textColor=%23ffffff&font=roboto", // K
-            "https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?lang=en&stageId=67047c99af56e6175101d37c&bodyColor=%23000000&textColor=%23ffffff&font=roboto"  // L
+        // LISTA DOS SEUS LINKS REAIS (IDs extraídos dos seus códigos)
+        const stages = [
+            "67047c992662621d770ac1b8", // A
+            "67047c99af56e6175101d376", // B
+            "67047c99c81c4876d00099a2", // C
+            "67047c992662621d770ac1ba", // D
+            "67047c99af56e6175101d378", // E
+            "67047c992662621d770ac1bc", // F
+            "67047c991c3e9feeb3052444", // G
+            "67047c992662621d770ac1be", // H
+            "67047c99af56e6175101d37a", // I
+            "67047c99c81c4876d00099a4", // J
+            "67047c992662621d770ac1c0", // K
+            "67047c99af56e6175101d37c"  // L
         ];
 
-        let i = 0;
-        const el = document.getElementById('quadro');
+        // Pega o índice atual da URL (ex: ?i=2) ou começa do 0
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentIndex = parseInt(urlParams.get('i')) || 0;
 
-        function trocar() {
-            el.src = tabelas[i];
-            i = (i + 1) % tabelas.length;
-        }
+        // Monta o link do widget (mas agora para ser aberto como PÁGINA)
+        const nextStage = stages[currentIndex];
+        const nextIndex = (currentIndex + 1) % stages.length;
 
-        // Começa agora
-        trocar();
-        // Troca a cada 20 segundos para dar tempo de ler
-        setInterval(trocar, 20000);
+        // O segredo: redireciona para o próximo grupo após 20 segundos
+        setTimeout(() => {
+            window.location.href = `https://raphaelsgrochajmp.github.io/united2026/?i=${nextIndex}`;
+        }, 20000);
+
+        // Desenha o widget na tela (usando o método padrão que eles pedem)
+        document.write(`<div id="wg" class="scoreaxis-widget"></div>`);
+        const s = document.createElement('script');
+        s.src = `https://widgets.scoreaxis.com/api/football/league-table/62322bfa75414360044d5ca4?widgetId=wg&lang=en&stageId=${nextStage}&teamLogo=1&tableLines=1&header=1&points=1&widgetWidth=600&bodyColor=%23000000&textColor=%23ffffff`;
+        document.body.appendChild(s);
     </script>
 </body>
 </html>
